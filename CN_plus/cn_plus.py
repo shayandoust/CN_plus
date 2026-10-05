@@ -73,17 +73,33 @@ def CN_PLUS(calc_name):
         dirpath = os.getcwd()
         print(dirpath)
 
-        # Set GULP command, input keywords and options
-        os.environ["GULP_LIB"] = ""
+        # Resolve GULP executable
+        gulp_exec = params["gulp_executable"]["value"]
+        if os.path.isfile(gulp_exec):
+            actual_gulp_exec = os.path.abspath(gulp_exec)
+        elif os.path.isfile(os.path.join(dirpath, gulp_exec.lstrip('/'))):
+            actual_gulp_exec = os.path.join(dirpath, gulp_exec.lstrip('/'))
+        elif os.path.isfile(dirpath + gulp_exec):
+            actual_gulp_exec = dirpath + gulp_exec
+        elif os.path.isfile("/home/shayan/Downloads/gulp-6.4/Src/gulp"):
+            actual_gulp_exec = "/home/shayan/Downloads/gulp-6.4/Src/gulp"
+        else:
+            actual_gulp_exec = dirpath + gulp_exec
+
+        # Set GULP_LIB if directory exists
+        if not os.environ.get("GULP_LIB"):
+            if os.path.isdir("/home/shayan/Downloads/gulp-6.4/Libraries"):
+                os.environ["GULP_LIB"] = "/home/shayan/Downloads/gulp-6.4/Libraries"
+            else:
+                os.environ["GULP_LIB"] = ""
+
         if params["calculator_cores"]["value"] > 1:
             os.environ["ASE_GULP_COMMAND"] = "timeout " + str(
                 params["calculator_time_limit"]["value"]) + " mpirun -np " + str(
-                params["calculator_cores"]["value"]) + " " + dirpath + \
-                                             params["gulp_executable"]["value"] + " < PREFIX.gin > PREFIX.got"
+                params["calculator_cores"]["value"]) + " " + actual_gulp_exec + " < PREFIX.gin > PREFIX.got"
         else:
             os.environ["ASE_GULP_COMMAND"] = "timeout " + str(
-                params["calculator_time_limit"]["value"]) + " " + dirpath + \
-                                             params["gulp_executable"]["value"] + " < PREFIX.gin > PREFIX.got"
+                params["calculator_time_limit"]["value"]) + " " + actual_gulp_exec + " < PREFIX.gin > PREFIX.got"
 
 
         rng = rngs.NR_Ran(params["random_seed"]["value"])

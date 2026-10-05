@@ -175,7 +175,7 @@ def initialise_from_cif(cif_file, atoms_file_data):
 
         for line in oxidation_loop_data:
 
-            names.append(line.split()[symbol_pos].translate(None, '0123456789'))
+            names.append(line.split()[symbol_pos].translate(str.maketrans('', '', '0123456789')))
             charges.append(float(line.split()[oxidation_pos]))
 
     # If charge data is not included in the cif file, read it from the atoms file

@@ -178,7 +178,7 @@ def optimization(s, procedure_parameters, out):
             # It reads the file with index=phase
             if operation == "input_structure":
                 files = [f for f in glob.glob(s.params["initial_structure_folder"]["value"] + "*.cif")]
-                structure = filter(lambda k: ("_" + str(phase) + ".") in k, files)
+                structure = list(filter(lambda k: ("_" + str(phase) + ".") in k, files))
                 if(len(structure) > 0):
                     s.structure = initialise.initialise_from_cif(structure[0], s.atoms_data)
                     say("Energy of input structure: " + str(s.getEnergy(True)))
@@ -473,7 +473,7 @@ def plot_data(params, path, name):
                 BoxNames = [str(ranges2[i]) + " to " + str(ranges2[i + 1]) for i in range(0, len(ranges2) - 1)]
                 BoxNames.append(" < " + str(ranges2[len(ranges2)-1]))
 
-	    numBoxes = len(BoxNames)
+            numBoxes = len(BoxNames)
             maxValue = -1
             minValue = 1000
             for box in range(0, numBoxes):
@@ -484,7 +484,16 @@ def plot_data(params, path, name):
                         maxValue = d
 
             fig, ax1 = plt.subplots(figsize=(10, 6))
-            fig.canvas.set_window_title(name)
+            if hasattr(fig.canvas, 'manager') and fig.canvas.manager is not None:
+                try:
+                    fig.canvas.manager.set_window_title(name)
+                except Exception:
+                    pass
+            elif hasattr(fig.canvas, 'set_window_title'):
+                try:
+                    fig.canvas.set_window_title(name)
+                except Exception:
+                    pass
             plt.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
 
             bp = plt.boxplot(data, notch=0, sym='+', vert=1, whis=1.5)
@@ -617,11 +626,10 @@ def writeProgressToCSV(progress, procedure_parameters, path, name):
                          delimiter=';',
                          quoting=csv.QUOTE_NONE,
                          skipinitialspace=True)
-    with open(path + '/results' + name + '.csv', 'w') as f:
+    with open(path + '/results' + name + '.csv', 'w', newline='') as f:
         writer = csv.writer(f, dialect='myDialect')
         for row in output_file_text:
             writer.writerow(row)
-    f.close()
 
 
 
@@ -726,7 +734,7 @@ def make_folders(base_path, procedure_parameters):
     """
 
     try:
-        os.mkdir(base_path)
+        os.makedirs(base_path, exist_ok=True)
     except OSError:
         print("Error creating directory " + base_path)
         #sys.exit("Terminating execution: Creation of the directory %s failed" % base_path)
@@ -735,7 +743,7 @@ def make_folders(base_path, procedure_parameters):
         path = ''
         try:
             path = os.path.join(base_path, str(operation))
-            os.mkdir(path)
+            os.makedirs(path, exist_ok=True)
         except OSError:
             sys.exit("Terminating execution: Creation of the directory %s failed" % path)
         else:

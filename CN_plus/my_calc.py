@@ -155,7 +155,7 @@ class matrix:
             for i, j in it.combinations(self.ions, 2):
                 threading.Thread(target=self.myCalc, args=(i, j, depth, energyClass)).start()
 
-            main_thread = threading.currentThread()
+            main_thread = getattr(threading, 'current_thread', getattr(threading, 'currentThread', None))()
 
             for t in threading.enumerate():
                 if t is not main_thread:

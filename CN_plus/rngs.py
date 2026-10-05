@@ -93,7 +93,7 @@ class NR_Ran(object):
         self.w = 1
 
         # Seed cannot be equal to value of v above
-        assert (seed != self.v), 'ERROR in rng.NR_Ran.__init__ -- seed must not equal value of intrinsic parameter, v=%i' % (v)
+        assert (seed != self.v), 'ERROR in rng.NR_Ran.__init__ -- seed must not equal value of intrinsic parameter, v=%i' % (self.v)
 
         # Initialise the constituent RNGS
         self.u = self.seed ^ self.v

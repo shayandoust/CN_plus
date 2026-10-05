@@ -20,9 +20,14 @@
 """
 
 import argparse
-import ase.io
 import os
 import sys
+
+_pkg_dir = os.path.dirname(os.path.abspath(__file__))
+if _pkg_dir not in sys.path:
+    sys.path.insert(0, _pkg_dir)
+
+import ase.io
 import inputs
 import cn_plus
 try:
@@ -136,7 +141,11 @@ def symmetrise_atoms(atoms):
     """
 
     # Call spglib on the atoms object
-    lattice, scaled_pos, atomic_numbers = spglib.standardize_cell(atoms)
+    cell = (atoms.cell, atoms.get_scaled_positions(), atoms.numbers)
+    res = spglib.standardize_cell(cell)
+    if res is None:
+        return atoms.copy()
+    lattice, scaled_pos, atomic_numbers = res
 
     # Record results in a new atoms object
     try:
@@ -145,7 +154,7 @@ def symmetrise_atoms(atoms):
                                       numbers=atomic_numbers,
                                       charges=atoms.get_initial_charges(),
                                       pbc=[True, True, True])
-    except:
+    except Exception:
         symmetrised_atoms = ase.Atoms(cell=lattice,
                                       scaled_positions=scaled_pos,
                                       numbers=atomic_numbers,

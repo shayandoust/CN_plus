@@ -20,12 +20,19 @@ Write an input file that includes all keywords with their default values to the 
 Execution:
 ===============================================
 
-You can run the code in Python 2.7. It uses the GULP (http://gulp.curtin.edu.au/gulp/) library to perform energy calculations and structure optimization. You can download it here https://gulp.curtin.edu.au/gulp/request.cfm?rel=download.
-This project was implemented using GULP 5.1.
+This project uses [uv](https://github.com/astral-sh/uv) and supports modern Python (3.10+ through 3.14+).
+To synchronize dependencies:
 
-After you download GULP, extract it and place it in the same directory as CN_plus. In addition, in the .inputs file, set the keyword "gulp_executable" to point the gulp executable (e.g., gulp_executable=/gulp-5.1/Src/gulp).
+    uv sync
 
-python CN_plus Input/SrTiO3/STO.input
+It uses the GULP (http://gulp.curtin.edu.au/gulp/) library to perform energy calculations and structure optimization.
+In your `.input` file, set the keyword "gulp_executable" to point to your gulp binary (e.g., `gulp_executable=/home/shayan/Downloads/gulp-6.4/Src/gulp` or relative to the workspace).
+
+You can run the program with `uv`:
+
+    uv run cn-plus Input/SrTiO3/STO.input
+    # or:
+    uv run python CN_plus Input/SrTiO3/STO.input
 
 
 Input files:

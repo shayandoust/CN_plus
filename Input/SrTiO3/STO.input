@@ -5,7 +5,7 @@
 #
 function=compare_basin_hopping_axes
 phases = 2
-output_file = /path/to/Results/STO.cnplus
+output_file = Results/STO.cnplus
 #calculator_cores = 2
 
 #
@@ -25,7 +25,7 @@ operations = 3
 operation_1 = random_structure
 operation_2 = axes
 operation_3 = relax_structure
-initial_structure_folder = /path/to/Input/Input_Structures/
+#initial_structure_folder = /path/to/Input/Input_Structures/
 
 
 #
@@ -38,14 +38,14 @@ whiskers_fine = -30.5, -31, -31.5, -31.6, -31.69
 #
 # For Functions: 'read_results_from_file'
 #
-pkl_file = /path/to/Results/Energies_Times_Axes.pkl
+pkl_file = Results/Energies_Times_Axes.pkl
 
 
 
 #
 # GULP
 #
-gulp_executable=/gulp-5.1/Src/gulp
+gulp_executable=/home/shayan/Downloads/gulp-6.4/Src/gulp
 calculator_time_limit=300
 gulp_library=Input/SrTiO3/STO.lib
 gulp_keywords_calculate_energy=single, c6

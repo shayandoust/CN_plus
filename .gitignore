@@ -1,0 +1,41 @@
+# Python virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+
+# Installer / tool cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Simulation, GULP, and generated outputs
+*.gin
+*.got
+*.res
+*.cnplus
+*.error
+*.gout
+current.cif
+defaults.input
+Results/Compare_Basin_Axes_*
+Results/*_*/
+Results/*.csv
+Results/*.png
+!Results/Energies_Times_Axes.pkl

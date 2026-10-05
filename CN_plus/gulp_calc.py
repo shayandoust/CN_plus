@@ -70,7 +70,7 @@ def gulp_relaxation(s, operation, gulp_shells=[]):
         calc = (GULP(label=files["name"], keywords=s.relax_unit_cell_keywords,
                      options=s.relax_unit_cell_options, shel=gulp_shells,
                      library=s.gulp_library))
-    structure.set_calculator(calc)
+    structure.calc = calc
 
     # Run calculation
     try:
@@ -86,7 +86,7 @@ def gulp_relaxation(s, operation, gulp_shells=[]):
         result = "gulp failure"
     if read_outcome(files["output"]) == timeout_outcome or check_timed_out(files["output"]):
         result = "timed out"
-    if (not isinstance(energy, float)) or (not isinstance(gnorm, float)) or (gnorm > s.max_gnorm):
+    if (not isinstance(energy, (float, int, np.floating))) or (not isinstance(gnorm, (float, int, np.floating))) or (s.max_gnorm != "" and s.max_gnorm is not None and gnorm > float(s.max_gnorm)):
         result = "unconverged"
 
     # This seems to be the only way to obtain the relaxed structure...
@@ -156,7 +156,7 @@ def read_from_restart_file(structure, energy, gulp_res_file):
 
             # This matches only if the line consists of "cell" and nothing else
             # Hence, we avoid a match on the "cellonly" keyword
-            if re.search("^cell$", line):
+            if re.search(r"^\s*cell\s*$", line):
                 cell_line = res_file[i + 1].split()
                 structure.set_cell(np.array([float(cell_line[0]), float(cell_line[1]),
                                              float(cell_line[2]), float(cell_line[3]),
@@ -164,7 +164,7 @@ def read_from_restart_file(structure, energy, gulp_res_file):
 
             # This matches only if the line consists of "vectors" and nothing
             # else. Hence, we avoid a match on the "eigenvectors" keyword
-            if re.search("^vectors$", line):
+            if re.search(r"^\s*vectors\s*$", line):
 
                 cell_vectors = []
                 for j in range(1, 4):
@@ -292,7 +292,7 @@ def check_timed_out(gulp_out_file):
     finished_marker = "Job Finished"
     terminated_marker = "Program terminated"
 
-    final_lines = subprocess.check_output(["tail", "-2", gulp_out_file])
+    final_lines = subprocess.check_output(["tail", "-2", gulp_out_file], universal_newlines=True)
     timed_out = True
     if (finished_marker in final_lines) or (terminated_marker in final_lines):
         timed_out = False

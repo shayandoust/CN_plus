@@ -5,7 +5,7 @@
 #
 function=read_results_from_file
 phases = 3
-output_file = /path/to/Results/YTiO.cnplus
+output_file = Results/YTiO.cnplus
 #calculator_cores = 2
 
 #
@@ -24,7 +24,7 @@ temp=0.025
 operations = 2
 operation_1 = random_structure
 operation_2 = axes
-initial_structure_folder = /path/to/Input/Input_Structures/
+#initial_structure_folder = /path/to/Input/Input_Structures/
 
 
 #
@@ -37,16 +37,16 @@ whiskers_fine = -30.0, -30.4, -30.8, -31.2, -31.4, -31.6, -31.69
 #
 # For Functions: 'read_results_from_file'
 #
-pkl_file = /path/to/Results/Energies_Times_Axes.pkl
+pkl_file = Results/Energies_Times_Axes.pkl
 
 
 
 #
 # GULP
 #
-gulp_executable=/gulp-5.1/Src/gulp
+gulp_executable=/home/shayan/Downloads/gulp-6.4/Src/gulp
 calculator_time_limit=300
-gulp_library=Input/STO.lib
+gulp_library=Input/Y2Ti2O7/YTiO.lib
 gulp_keywords_calculate_energy=single, c6
 #noelectrostatics, cartesian
 gulp_keywords_relax=opti, c6, pot, conp, conj, unfix

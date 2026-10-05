@@ -90,7 +90,7 @@ class structure_class:
             try:
                 calc = (GULP(keywords=self.params["gulp_keywords_calculate_energy"]["value"],
                              library=self.params["gulp_library"]["value"]))
-                self.structure.set_calculator(calc)
+                self.structure.calc = calc
                 self.energy = self.structure.get_potential_energy()
                 self.numberOfSinglePointCalculations += 1
                 return True, self.energy / self.numberOfAtoms
@@ -144,10 +144,15 @@ class structure_class:
 
     def symmetrize(self):
         try:
-            lattice, scaled_pos, atomic_numbers = sp.standardize_cell(self.structure)
-            self.structure = ase.Atoms(cell=lattice, scaled_positions=scaled_pos, numbers=atomic_numbers,
-                                          charges=self.structure.get_initial_charges(),
-                                          pbc=[True, True, True])
-            print("Symmetrize atoms: success")
-        except:
+            cell = (self.structure.cell, self.structure.get_scaled_positions(), self.structure.numbers)
+            res = sp.standardize_cell(cell)
+            if res is not None:
+                lattice, scaled_pos, atomic_numbers = res
+                self.structure = ase.Atoms(cell=lattice, scaled_positions=scaled_pos, numbers=atomic_numbers,
+                                           charges=self.structure.get_initial_charges(),
+                                           pbc=[True, True, True])
+                print("Symmetrize atoms: success")
+            else:
+                print("Symmetrize atoms: error")
+        except Exception:
             print("Symmetrize atoms: error")

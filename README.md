@@ -1,3 +1,5 @@
+THIS PROJECT IS A FORK OF THE ORIGINAL https://github.com/michael2393/CN_plus/
+
 # CN_plus
 Local search algorithms for the Crystal Structure Prediction problem.
 
